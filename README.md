@@ -99,6 +99,35 @@ payload:
   - DOMAIN-SUFFIX,example.com
 ```
 
+
+---
+
+## 🛠️ 维护者指南 (Maintainer Guide)
+
+如果你是本项目所有者（`logicrw`），想要新增特殊的分流域名（如 AI、Gemini 或 Crypto）：
+
+### 1. 修改 Surge 规则源仓库 (RuleGo)
+项目的 AI、Gemini 和 Crypto 规则集源头在你的另一个仓库 [RuleGo](https://github.com/logicrw/RuleGo)（`patch-1` 分支）中：
+- **AI 规则**：`Surge/Ruleset/Extra/AI.list`
+- **Gemini 规则**：`Surge/Ruleset/Extra/GenAI/Google.list`
+- **Crypto 规则**：`Surge/Ruleset/Extra/Crypto.list`
+
+请**先**在 `logicrw/RuleGo` 仓库的 `patch-1` 分支中修改对应的 `.list` 文件（如直接在 GitHub 网页上修改，或在本地修改后 `git push origin patch-1`）。
+
+### 2. 同步到 clash-rules
+修改并推送 `RuleGo` 后，在本项目根目录下运行转换脚本：
+```bash
+python3 scripts/convert.py
+```
+这会重新拉取 `RuleGo` 的最新规则并更新 Clash 规则（如 `rules/ai-extra.yaml`）。
+
+然后，将生成的更改提交并推送至本项目的 `main` 分支即可（GitHub Actions 会自动将其发布至 `release` 分支）：
+```bash
+git add rules/
+git commit -m "chore: sync rules from RuleGo"
+git push origin main
+```
+
 ---
 
 ## 🙏 致谢
